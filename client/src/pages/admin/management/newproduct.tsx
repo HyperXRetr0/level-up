@@ -1,0 +1,118 @@
+import { ChangeEvent, FormEvent, useState } from "react";
+import AdminSidebar from "../../../components/admin/AdminSidebar";
+import { useSelector } from "react-redux";
+import { UserReducerInitialState } from "../../../types/reducer-types";
+import { useCreateProductsMutation } from "../../../redux/api/product";
+import { responseToast } from "../../../utils/features";
+import { useNavigate } from "react-router-dom";
+
+const NewProduct = () => {
+  const { user, loading } = useSelector(
+    (state: { userReducer: UserReducerInitialState }) => state.userReducer
+  );
+
+  const [name, setName] = useState<string>("");
+  const [category, setCategory] = useState<string>("");
+  const [price, setPrice] = useState<number>(1000);
+  const [stock, setStock] = useState<number>(1);
+  const [photoPrev, setPhotoPrev] = useState<string>("");
+  const [imgUrl, setImgUrl] = useState<string>("");
+  const [createProduct] = useCreateProductsMutation();
+  const navigate = useNavigate();
+
+  const changeImageHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const file: File | undefined = e.target.files?.[0];
+
+    const reader: FileReader = new FileReader();
+
+    if (file) {
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          setPhotoPrev(reader.result);
+          setImgUrl(file.name);
+        }
+      };
+    }
+    console.log(imgUrl);
+  };
+
+  const submitHandler = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!name || !price || !stock || !imgUrl || !category) return;
+    const formData = new FormData();
+    formData.set("name", name);
+    formData.set("price", price.toString());
+    formData.set("imgUrl", imgUrl);
+    formData.set("name", name);
+    formData.set("stock", stock.toString());
+    console.log(formData);
+
+    const response = await createProduct({ id: user!._id, formData });
+    responseToast(response, navigate, "/admin/product");
+  };
+
+  return (
+    <div className="admin-container">
+      <AdminSidebar />
+      <main className="product-management">
+        <article>
+          <form onSubmit={submitHandler}>
+            <h2>New Product</h2>
+            <div>
+              <label>Name</label>
+              <input
+                type="text"
+                placeholder="Name"
+                value={name}
+                required
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label>Price</label>
+              <input
+                type="number"
+                placeholder="Price"
+                value={price}
+                required
+                onChange={(e) => setPrice(Number(e.target.value))}
+              />
+            </div>
+            <div>
+              <label>Stock</label>
+              <input
+                type="number"
+                placeholder="Stock"
+                value={stock}
+                required
+                onChange={(e) => setStock(Number(e.target.value))}
+              />
+            </div>
+
+            <div>
+              <label>Category</label>
+              <input
+                type="text"
+                placeholder="eg. laptop, camera etc"
+                value={category}
+                required
+                onChange={(e) => setCategory(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label>Photo</label>
+              <input type="file" onChange={changeImageHandler} required />
+            </div>
+
+            {photoPrev && <img src={photoPrev} alt="New Image" />}
+            <button type="submit">Create</button>
+          </form>
+        </article>
+      </main>
+    </div>
+  );
+};
+
+export default NewProduct;
