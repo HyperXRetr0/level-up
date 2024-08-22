@@ -9,10 +9,15 @@ Level Up is an e-commerce platform where users can purchase video games. The web
 ## ✨ Features
 
 🔒 User Authentication: Secure sign-up, log-in, and account management using Firebase.
+
 💳 Stripe Payment Integration: Secure and easy-to-use payment processing.
+
 ⚡ Efficient Caching: Fast data retrieval to enhance user experience.
+
 🕹️ Game Catalog: Browse and search through a comprehensive catalog of video games.
+
 📱 Responsive Design: Optimized for both desktop and mobile devices.
+
 ## 🛠️ Tech Stack
 
 - Frontend: React, TypeScript, Sass
