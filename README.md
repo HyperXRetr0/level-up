@@ -1,6 +1,6 @@
 
 # LevelUp - Video Game E-Commerce Platform
-![alt text](./images/Level Up.png)
+![alt text](https://github.com/HyperXRetr0/level-up/blob/main/images/Level%20Up.png)
 
 
 
